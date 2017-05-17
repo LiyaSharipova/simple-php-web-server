@@ -1,0 +1,9 @@
+{
+  "name": "liyasharipova/simple-php-web-server",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "LiyaSharipova\\SimplePhpWebServer\\": "src/"
+    }
+  }
+}
