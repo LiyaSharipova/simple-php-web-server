@@ -29,4 +29,6 @@ $server->listen( function( Request $request )
 	
 	// return a response containing the request information
 	return new Response( '<pre>'.print_r( $request, true ).'</pre>' );
+//    return new Response( '<pre>'."asjdhs".'</pre>' );
+
 });
