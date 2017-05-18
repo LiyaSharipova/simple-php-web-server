@@ -1,6 +1,8 @@
 <?php namespace LiyaSharipova\SimplePhpWebServer;
 
-class Response 
+use lf4php\LoggerFactory;
+
+class Response
 {
 	/**
 	 * An array of the available HTTP response codes
@@ -144,7 +146,10 @@ class Response
 	 */
 	public function buildHeaderString()
 	{
-		$lines = [];
+        $logger = LoggerFactory::getLogger(basename(Response::class));
+        $logger->info("Building response to server");
+
+        $lines = [];
 		
 		// response status 
 		$lines[] = "HTTP/1.1 ".$this->status." ".static::$statusCodes[$this->status];

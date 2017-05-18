@@ -1,34 +1,59 @@
 #!/usr/bin/env php
-<?php 
+<?php
 
 use LiyaSharipova\SimplePhpWebServer\Server;
 use LiyaSharipova\SimplePhpWebServer\Request;
 use LiyaSharipova\SimplePhpWebServer\Response;
 
+use lf4php\LoggerFactory;
+
 require 'vendor/autoload.php';
 
+
 // we never need the first argument
-array_shift( $argv );
+array_shift($argv);
 
 // the next argument should be the port if not use 80
-if ( empty( $argv ) )
-{
-	$port = 8090;
+if (empty($argv)) {
+    $port = 8015;
 } else {
-	$port = array_shift( $argv );
+    $port = array_shift($argv);
 }
 
 // create a new startup.php instance
-$server = new Server( '127.0.0.1', $port );
+$server = new Server('127.0.0.1', $port);
 
 // start listening
-$server->listen( function( Request $request ) 
-{
-	// print information that we recived the request
-	echo $request->method() . ' ' . $request->uri() . "\n";
-	
-	// return a response containing the request information
-	return new Response( '<pre>'.print_r( $request, true ).'</pre>' );
-//    return new Response( '<pre>'."asjdhs".'</pre>' );
+$server->listen(function (Request $request) {
+
+    $logger = LoggerFactory::getLogger(basename(__FILE__));
+
+    $uri = $request->uri();
+
+    var_dump($logger->isInfoEnabled());
+    $logger->info($request->method() . ' ' . $uri);
+
+    $response = '';
+    switch (true) {
+        case (match($uri, "/^\/$/")): {
+            $response = "this is root web-page";
+            break;
+        }
+        case (match($uri, "/^\/hello\/?$/")): {
+            $response = "this is hello web-page";
+            break;
+        }
+        default:
+            $logger->error("A controller for url=" . "\"" . $uri . "\"" . " is not defined!");
+    }
+
+    return new Response('<pre>' . $response . '</pre>');
 
 });
+
+function match(String $uri, String $regex): bool
+{
+    if (preg_match($regex, $uri) == 1)
+        return true;
+    else return false;
+}
