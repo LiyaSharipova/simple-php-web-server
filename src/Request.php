@@ -4,39 +4,20 @@ use LiyaSharipova\SimplePhpWebServer\CustomException;
 
 class Request 
 {
-	/**
-	 * The request method
-	 *
-	 * @var string 
-	 */
+	
 	protected $method = null;
 	
-	/**
-	 * The requested uri
-	 *
-	 * @var string
-	 */
+	
 	protected $uri = null;
 	
-	/**
-	 * The request params
-	 *
-	 * @var array
-	 */
+	
 	protected $parameters = [];
 	
-	/**
-	 * The request params
-	 *
-	 * @var array
-	 */
+	
 	protected $headers = [];
 	
 	/**
 	 * Create new request instance using a string header
-	 *
-	 * @param string 			$header
-	 * @return Request
 	 */
 	public static function withHeaderString( $header )
 	{
@@ -65,11 +46,6 @@ class Request
 	
 	/**
 	 * Request constructor
-	 *
-	 * @param string 			$method
-	 * @param string 			$uri
-	 * @param array 			$headers
-	 * @return void
 	 */
 	public function __construct( $method, $uri, $headers = [] ) 
 	{
@@ -85,8 +61,6 @@ class Request
 	
 	/**
 	 * Return the request method
-	 *
-	 * @return string
 	 */
 	public function method()
 	{
@@ -95,8 +69,6 @@ class Request
 	
 	/**
 	 * Return the request uri
-	 *
-	 * @return string
 	 */
 	public function uri()
 	{
@@ -105,8 +77,6 @@ class Request
 	
 	/**
 	 * Return a request header
-	 *
-	 * @return string
 	 */
 	public function header( $key, $default = null )
 	{
@@ -120,8 +90,6 @@ class Request
 	
 	/**
 	 * Return a request parameter
-	 *
-	 * @return string
 	 */
 	public function param( $key, $default = null )
 	{

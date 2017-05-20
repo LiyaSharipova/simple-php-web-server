@@ -1,13 +1,10 @@
 <?php namespace LiyaSharipova\SimplePhpWebServer;
 
-use lf4php\LoggerFactory;
 
 class Response
 {
 	/**
 	 * An array of the available HTTP response codes
-	 *
-	 * @var array
 	 */
 	protected static $statusCodes = [
 		// Informational 1xx
@@ -65,9 +62,6 @@ class Response
 	
 	/**
 	 * Returns a simple response based on a status code
-	 *
-	 * @param int			$status
-	 * @return Response
 	 */
 	public static function error( $status )
 	{
@@ -76,31 +70,21 @@ class Response
 	
 	/**
 	 * The current response status
-	 *
-	 * @var int
 	 */
 	protected $status = 200;
 	
 	/**
 	 * The current response body
-	 *
-	 * @var string
 	 */
 	protected $body = '';
 	
 	/**
 	 * The current response headers
-	 *
-	 * @var array
 	 */
 	protected $headers = [];
 	
 	/**
 	 * Construct a new Response object
-	 *
-	 * @param string 		$body
-	 * @param int 			$status
-	 * @return void
 	 */
 	public function __construct( $body, $status = null )
 	{
@@ -119,8 +103,6 @@ class Response
 	
 	/**
 	 * Return the response body
-	 *
-	 * @return string
 	 */
 	public function body()
 	{
@@ -129,10 +111,6 @@ class Response
 	
 	/**
 	 * Add or overwrite an header parameter header 
-	 *
-	 * @param string 			$key
-	 * @param string 			$value
-	 * @return void
 	 */
 	public function header( $key, $value )
 	{
@@ -141,14 +119,9 @@ class Response
 	
 	/**
 	 * Build a header string based on the current object
-	 *
-	 * @return string
 	 */
 	public function buildHeaderString()
 	{
-        $logger = LoggerFactory::getLogger(basename(Response::class));
-        $logger->info("Building response to server");
-
         $lines = [];
 		
 		// response status 
@@ -165,8 +138,6 @@ class Response
 	
 	/**
 	 * Create a string out of the response data
-	 *
-	 * @return string
 	 */
 	public function __toString()
 	{

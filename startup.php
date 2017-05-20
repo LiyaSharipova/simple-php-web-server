@@ -1,37 +1,39 @@
 #!/usr/bin/env php
 <?php
 
+require_once 'vendor/autoload.php';
+
 use LiyaSharipova\SimplePhpWebServer\Server;
 use LiyaSharipova\SimplePhpWebServer\Request;
 use LiyaSharipova\SimplePhpWebServer\Response;
 
-use lf4php\LoggerFactory;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
-require 'vendor/autoload.php';
 
-
-// we never need the first argument
+// Извлекаем первое значение массива $argv и возвращает его, сокращая размер $argv на один элемент
 array_shift($argv);
 
-// the next argument should be the port if not use 80
+// Указываем в качестве порта значение из опции, если он не пустой
 if (empty($argv)) {
-    $port = 8015;
+    $port = 8021;
 } else {
     $port = array_shift($argv);
 }
 
-// create a new startup.php instance
 $server = new Server('127.0.0.1', $port);
 
-// start listening
 $server->listen(function (Request $request) {
 
-    $logger = LoggerFactory::getLogger(basename(__FILE__));
+    // Создаем логгер с именем loggerName
+    $loggerName = 'server';
+    $logger = new Logger($loggerName);
+    // Логгер будет выводить на консоль (STandarD OUTput) текст с уровнем не ниже INFO
+    $logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
 
     $uri = $request->uri();
 
-    var_dump($logger->isInfoEnabled());
-    $logger->info($request->method() . ' ' . $uri);
+    $logger->info("Requested content: " . $request->method() . ' ' . $uri);
 
     $response = '';
     switch (true) {
@@ -51,6 +53,12 @@ $server->listen(function (Request $request) {
 
 });
 
+/**
+ * Проверка роутинга
+ * @param String $uri
+ * @param String $regex
+ * @return bool
+ */
 function match(String $uri, String $regex): bool
 {
     if (preg_match($regex, $uri) == 1)
