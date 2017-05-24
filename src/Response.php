@@ -58,13 +58,13 @@ class Response
         509 => 'Bandwidth Limit Exceeded'
     ];
 
-
+//обработка ошибок
     public static function error($status)
     {
-        return new static("<h1>PHPServer: " . $status . " - " . static::$statusCodes[$status] . "</h1>", $status);
+        return new static("<h1>SimplePHPServer: " . $status . " - " . static::$statusCodes[$status] . "</h1>", $status);
     }
 
-
+// по умолчанию успех
     protected $status = 200;
 
 
@@ -82,7 +82,7 @@ class Response
 
         $this->body = $body;
 
-        // set inital headers
+        // задаем headers
         $this->header('Date', gmdate('D, d M Y H:i:s T'));
         $this->header('Content-Type', 'text/html; charset=utf-8');
         $this->header('Server', 'SimplePhpWebServer');

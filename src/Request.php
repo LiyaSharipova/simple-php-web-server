@@ -17,12 +17,13 @@ class Request
 
     public static function withHeaderString($header)
     {
+        //разделяем данные headers на строки
         $lines = explode("\n", $header);
-
+        // get method and resourseAddress из 1й строки
         list($method, $resourceAddress) = explode(' ', array_shift($lines));
 
         $headers = [];
-
+        //записываем headers в нужном формате
         foreach ($lines as $line) {
             $line = trim($line);
 
@@ -31,7 +32,7 @@ class Request
                 $headers[$key] = $value;
             }
         }
-
+        // возвращаем новый Request
         return new static($method, $resourceAddress, $headers);
     }
 

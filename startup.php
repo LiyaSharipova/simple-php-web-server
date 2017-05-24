@@ -22,8 +22,10 @@ if (empty($argv)) {
     $port = array_shift($argv);
 }
 
+//создаем сервер на указанном адресе и порту
 $server = new Server('127.0.0.1', $port);
 
+//метод listen слушает запросы на сокете и регистрирует callback функцию
 $server->listen(function (Request $request) {
 
     // Создаем логгер с именем loggerName
@@ -32,10 +34,12 @@ $server->listen(function (Request $request) {
     // Логгер будет выводить на консоль (STandarD OUTput) текст с уровнем не ниже INFO
     $logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
 
+    //получаем адресс ресурса на этом сайте
     $resourceAddress = $request->resourceAddress();
 
     $logger->info("Requested content: " . $request->method() . ' ' . $resourceAddress);
 
+    //формируем body response
     $response = '';
     switch (true) {
         case (match($resourceAddress, "/^\/$/")): {

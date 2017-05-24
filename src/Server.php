@@ -18,16 +18,18 @@ class Server
         $this->host = $host;
         $this->port = (int)$port;
 
-        // create a socket
+        // создаем сокет
         $this->createSocket();
 
-        // bind the socket
+        // присваиваем сокету адрес и порт
         $this->bind();
     }
 
 
     protected function createSocket()
     {
+        //AF_INET - ipv4
+        //SOCK_STREAM - технология передачи байтов
         $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
     }
 
@@ -42,42 +44,41 @@ class Server
 
     public function listen($callback)
     {
-        // check if the callback is valid
+        // проверяем callback функцию
         if (!is_callable($callback)) {
             throw new CustomException('The given argument should be callable.');
         }
 
         while (1) {
-            // listen for connections
+            // слушает соединения
             socket_listen($this->socket);
 
-            // try to get the client socket resource
-            // if false we got an error close the connection and continue
+            // пытаемся получить ресурс сокета клиента
+            // если получаем ошибку, закрываем соединение и продолжаем слушать
             if (!$client = socket_accept($this->socket)) {
                 socket_close($client);
                 continue;
             }
 
-            // create new request instance with the clients header.
-            // In the real world of course you cannot just fix the max size to 1024..
+            // получаем данные у клиента длиной 1024 символа.
+            // создаем из них request с headers, кот нам отправил клиент
             $request = Request::withHeaderString(socket_read($client, 1024));
 
-            // execute the callback
+            // вызываем функ callback и передаем request
             $response = call_user_func($callback, $request);
 
-            // check if we really recived an Response object
-            // if not return a 404 response object
+            //если response нет, задаем статус 404
             if (!$response || !$response instanceof Response) {
                 $response = Response::error(404);
             }
 
-            // make a string out of our response
+            // вызываем toString у response
             $response = (string)$response;
 
-            // write the response to the client socket
+            // отдаем клиенту response и указываем длину строки
             socket_write($client, $response, strlen($response));
 
-            // close the connetion so we can accept new ones
+            // закрываем сокет
             socket_close($client);
         }
     }
