@@ -36,6 +36,6 @@ if ($curl = @curl_init()) {
     echo "curl executed\n";
     // Вывести полученные данные
     echo $data;
-    // Особождение ресурса
+    // Особождение ресурса - сокетов
     @curl_close($curl);
 }

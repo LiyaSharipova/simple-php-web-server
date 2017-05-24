@@ -17,7 +17,7 @@ array_shift($argv);
 
 // Указываем в качестве порта значение из опции, если он не пустой
 if (empty($argv)) {
-    $port = 8021;
+    $port = 8022;
 } else {
     $port = array_shift($argv);
 }
@@ -32,22 +32,22 @@ $server->listen(function (Request $request) {
     // Логгер будет выводить на консоль (STandarD OUTput) текст с уровнем не ниже INFO
     $logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
 
-    $uri = $request->uri();
+    $resourceAddress = $request->resourceAddress();
 
-    $logger->info("Requested content: " . $request->method() . ' ' . $uri);
+    $logger->info("Requested content: " . $request->method() . ' ' . $resourceAddress);
 
     $response = '';
     switch (true) {
-        case (match($uri, "/^\/$/")): {
+        case (match($resourceAddress, "/^\/$/")): {
             $response = "this is root web-page";
             break;
         }
-        case (match($uri, "/^\/hello\/?$/")): {
+        case (match($resourceAddress, "/^\/hello\/?$/")): {
             $response = "this is hello web-page";
             break;
         }
         default:
-            $logger->error("A controller for url=" . "\"" . $uri . "\"" . " is not defined!");
+            $logger->error("A controller for url=" . "\"" . $resourceAddress . "\"" . " is not defined!");
     }
 
     return new Response('<pre>' . $response . '</pre>');

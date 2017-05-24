@@ -1,103 +1,80 @@
 <?php namespace LiyaSharipova\SimplePhpWebServer;
 
-use LiyaSharipova\SimplePhpWebServer\CustomException;
-
-class Request 
+class Request
 {
-	
-	protected $method = null;
-	
-	
-	protected $uri = null;
-	
-	
-	protected $parameters = [];
-	
-	
-	protected $headers = [];
-	
-	/**
-	 * Create new request instance using a string header
-	 */
-	public static function withHeaderString( $header )
-	{
-		$lines = explode( "\n", $header );
-		
-		// method and uri
-		list( $method, $uri ) = explode( ' ', array_shift( $lines ) );
-		
-		$headers = [];
-		
-		foreach( $lines as $line )
-		{
-			// clean the line
-			$line = trim( $line );
-			
-			if ( strpos( $line, ': ' ) !== false )
-			{
-				list( $key, $value ) = explode( ': ', $line );
-				$headers[$key] = $value;
-			}
-		}	
-		
-		// create new request object
-		return new static( $method, $uri, $headers );
-	}
-	
-	/**
-	 * Request constructor
-	 */
-	public function __construct( $method, $uri, $headers = [] ) 
-	{
-		$this->headers = $headers;
-		$this->method = strtoupper( $method );
-		
-		// split uri and parameters string
-		@list( $this->uri, $params ) = explode( '?', $uri );
 
-		// parse the parmeters
-		parse_str( $params, $this->parameters );
-	}
-	
-	/**
-	 * Return the request method
-	 */
-	public function method()
-	{
-		return $this->method;
-	}
-	
-	/**
-	 * Return the request uri
-	 */
-	public function uri()
-	{
-		return $this->uri;
-	}
-	
-	/**
-	 * Return a request header
-	 */
-	public function header( $key, $default = null )
-	{
-		if ( !isset( $this->headers[$key] ) )
-		{
-			return $default;
-		}
-		
-		return $this->headers[$key];
-	}
-	
-	/**
-	 * Return a request parameter
-	 */
-	public function param( $key, $default = null )
-	{
-		if ( !isset( $this->parameters[$key] ) )
-		{
-			return $default;
-		}
-		
-		return $this->parameters[$key];
-	}
+    protected $method = null;
+
+
+    protected $resourceAddress = null;
+
+
+    protected $parameters = [];
+
+
+    protected $headers = [];
+
+
+    public static function withHeaderString($header)
+    {
+        $lines = explode("\n", $header);
+
+        list($method, $resourceAddress) = explode(' ', array_shift($lines));
+
+        $headers = [];
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            if (strpos($line, ': ') !== false) {
+                list($key, $value) = explode(': ', $line);
+                $headers[$key] = $value;
+            }
+        }
+
+        return new static($method, $resourceAddress, $headers);
+    }
+
+
+    public function __construct($method, $resourceAddress, $headers = [])
+    {
+        $this->headers = $headers;
+        $this->method = strtoupper($method);
+
+        @list($this->resourceAddress, $params) = explode('?', $resourceAddress);
+
+        parse_str($params, $this->parameters);
+    }
+
+
+    public function method()
+    {
+        return $this->method;
+    }
+
+
+    public function resourceAddress()
+    {
+        return $this->resourceAddress;
+    }
+
+
+    public function header($key, $default = null)
+    {
+        if (!isset($this->headers[$key])) {
+            return $default;
+        }
+
+        return $this->headers[$key];
+    }
+
+
+    public function param($key, $default = null)
+    {
+        if (!isset($this->parameters[$key])) {
+            return $default;
+        }
+
+        return $this->parameters[$key];
+    }
 }

@@ -1,10 +1,8 @@
 <?php namespace LiyaSharipova\SimplePhpWebServer;
 
-use LiyaSharipova\SimplePhpWebServer\CustomException;
-use LiyaSharipova\SimplePhpWebServer\Request;
-
 class Server
 {
+
 
     protected $host = null;
 
